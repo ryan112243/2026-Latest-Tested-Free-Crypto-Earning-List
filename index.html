@@ -298,6 +298,13 @@
       margin-bottom: 58px;
     }
 
+    .ad-inline {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: center;
+      padding: 8px 0;
+    }
+
     .card {
       min-height: 228px;
       display: flex;
@@ -806,6 +813,18 @@
       `;
     }
 
+    function middleAdMarkup() {
+      return `
+        <div class="ad-inline" aria-label="Advertisement">
+          <!-- BEGIN AADS AD UNIT 2447183 -->
+          <div class="ad-unit">
+            <iframe data-aa="2447183" src="//ad.a-ads.com/2447183/?size=728x90" title="Advertisement"></iframe>
+          </div>
+          <!-- END AADS AD UNIT 2447183 -->
+        </div>
+      `;
+    }
+
     function renderFilters() {
       filters.innerHTML = categories.map((category) => `
         <button class="filter-button${category === activeCategory ? " is-active" : ""}" type="button" data-category="${escapeHtml(category)}">
@@ -826,13 +845,13 @@
 
     function renderCards() {
       const items = getFilteredPlatforms();
-      grid.innerHTML = items.map((platform) => {
+      grid.innerHTML = items.map((platform, index) => {
         const name = escapeHtml(platform.name);
         const category = escapeHtml(categoryLabel(platform.category));
         const description = escapeHtml(platformDescription(platform));
         const hostname = escapeHtml(getHostname(platform.url));
 
-        return `
+        const cardMarkup = `
           <article class="card">
             <div class="card-head">
               <img class="site-icon" src="${getIconUrl(platform.url)}" alt="${name} icon" loading="lazy">
@@ -847,6 +866,8 @@
             </a>
           </article>
         `;
+
+        return index === 8 && items.length > 9 ? `${cardMarkup}${middleAdMarkup()}` : cardMarkup;
       }).join("");
 
       visibleCount.textContent = items.length;
