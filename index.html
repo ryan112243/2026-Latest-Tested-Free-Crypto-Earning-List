@@ -288,10 +288,14 @@
     .grid {
       width: min(var(--max), calc(100% - 32px));
       margin: 0 auto;
-      padding: 0 0 58px;
+      padding: 0 0 24px;
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
+    }
+
+    .ad-bottom {
+      margin-bottom: 58px;
     }
 
     .card {
@@ -473,7 +477,7 @@
       .grid {
         grid-template-columns: 1fr;
         gap: 12px;
-        padding-bottom: 38px;
+        padding-bottom: 22px;
       }
 
       .card {
@@ -539,6 +543,13 @@
     </section>
 
     <section id="cardGrid" class="grid" aria-label="Platform list"></section>
+    <section class="ad-strip ad-bottom" aria-label="Advertisement">
+      <!-- BEGIN AADS AD UNIT 2447182 -->
+      <div class="ad-unit">
+        <iframe data-aa="2447182" src="//ad.a-ads.com/2447182/?size=728x90" title="Advertisement"></iframe>
+      </div>
+      <!-- END AADS AD UNIT 2447182 -->
+    </section>
     <p id="emptyMessage" class="empty" data-i18n="empty">No platforms match your search.</p>
   </main>
 
