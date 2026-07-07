@@ -226,6 +226,16 @@
       overflow: hidden;
     }
 
+    .ad-unit-rectangle {
+      width: min(300px, 100%);
+      min-height: 250px;
+    }
+
+    .ad-unit-rectangle iframe {
+      width: 300px;
+      height: 250px;
+    }
+
     .search {
       height: 50px;
       min-width: 0;
@@ -814,13 +824,18 @@
     }
 
     function middleAdMarkup() {
+      const isCompact = window.matchMedia("(max-width: 640px)").matches;
+      const adUnitId = isCompact ? "2447184" : "2447183";
+      const adSize = isCompact ? "300x250" : "728x90";
+      const adClass = isCompact ? "ad-unit ad-unit-rectangle" : "ad-unit";
+
       return `
         <div class="ad-inline" aria-label="Advertisement">
-          <!-- BEGIN AADS AD UNIT 2447183 -->
-          <div class="ad-unit">
-            <iframe data-aa="2447183" src="//ad.a-ads.com/2447183/?size=728x90" title="Advertisement"></iframe>
+          <!-- BEGIN AADS AD UNIT ${adUnitId} -->
+          <div class="${adClass}">
+            <iframe data-aa="${adUnitId}" src="//ad.a-ads.com/${adUnitId}/?size=${adSize}" title="Advertisement"></iframe>
           </div>
-          <!-- END AADS AD UNIT 2447183 -->
+          <!-- END AADS AD UNIT ${adUnitId} -->
         </div>
       `;
     }
@@ -889,6 +904,12 @@
       currentLanguage = languageSelect.value;
       saveLanguage(currentLanguage);
       applyLanguage();
+    });
+
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(renderCards, 180);
     });
 
     totalCount.textContent = platforms.length;
