@@ -540,13 +540,7 @@
       </aside>
     </section>
 
-    <section class="ad-strip" aria-label="Advertisement">
-      <!-- BEGIN AADS AD UNIT 2447181 -->
-      <div class="ad-unit">
-        <iframe data-aa="2447181" src="//ad.a-ads.com/2447181/?size=728x90" title="Advertisement"></iframe>
-      </div>
-      <!-- END AADS AD UNIT 2447181 -->
-    </section>
+    <section id="topAdSlot" class="ad-strip" aria-label="Advertisement"></section>
 
     <section class="controls" aria-label="List controls">
       <label class="search">
@@ -612,6 +606,7 @@
     ];
 
     const grid = document.getElementById("cardGrid");
+    const topAdSlot = document.getElementById("topAdSlot");
     const searchInput = document.getElementById("searchInput");
     const filters = document.getElementById("filters");
     const languageSelect = document.getElementById("languageSelect");
@@ -823,19 +818,37 @@
       `;
     }
 
+    function isCompactViewport() {
+      return window.matchMedia("(max-width: 640px)").matches;
+    }
+
+    function adUnitMarkup(id, size) {
+      const isRectangle = size === "300x250";
+      const adClass = isRectangle ? "ad-unit ad-unit-rectangle" : "ad-unit";
+
+      return `
+        <!-- BEGIN AADS AD UNIT ${id} -->
+        <div class="${adClass}">
+          <iframe data-aa="${id}" src="//ad.a-ads.com/${id}/?size=${size}" title="Advertisement"></iframe>
+        </div>
+        <!-- END AADS AD UNIT ${id} -->
+      `;
+    }
+
+    function renderTopAd() {
+      topAdSlot.innerHTML = isCompactViewport()
+        ? adUnitMarkup("2447185", "300x250")
+        : adUnitMarkup("2447181", "728x90");
+    }
+
     function middleAdMarkup() {
-      const isCompact = window.matchMedia("(max-width: 640px)").matches;
+      const isCompact = isCompactViewport();
       const adUnitId = isCompact ? "2447184" : "2447183";
       const adSize = isCompact ? "300x250" : "728x90";
-      const adClass = isCompact ? "ad-unit ad-unit-rectangle" : "ad-unit";
 
       return `
         <div class="ad-inline" aria-label="Advertisement">
-          <!-- BEGIN AADS AD UNIT ${adUnitId} -->
-          <div class="${adClass}">
-            <iframe data-aa="${adUnitId}" src="//ad.a-ads.com/${adUnitId}/?size=${adSize}" title="Advertisement"></iframe>
-          </div>
-          <!-- END AADS AD UNIT ${adUnitId} -->
+          ${adUnitMarkup(adUnitId, adSize)}
         </div>
       `;
     }
@@ -909,12 +922,16 @@
     let resizeTimer;
     window.addEventListener("resize", () => {
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(renderCards, 180);
+      resizeTimer = setTimeout(() => {
+        renderTopAd();
+        renderCards();
+      }, 180);
     });
 
     totalCount.textContent = platforms.length;
     metricCount.textContent = platforms.length;
     currentLanguage = detectLanguage();
+    renderTopAd();
     applyLanguage();
   </script>
 </body>
